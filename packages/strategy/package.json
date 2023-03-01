@@ -1,0 +1,22 @@
+{
+  "name": "strategy",
+  "author": "qi.futao",
+  "version": "0.0.01",
+  "description": "",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "father-build",
+    "watch": "father-build --watch"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
