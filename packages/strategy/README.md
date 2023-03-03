@@ -17,7 +17,7 @@ TODO:
 
 一个游戏公司开发了一款模拟鸭子的游戏，所有的鸭子都会呱呱叫(quack)、游泳(swim) 和 显示(dislay) 方法。
 
-基于面向对象的设计思想，想到的是设计一个Duck基类，然后让所有的鸭子都集成此基类。
+基于面向对象的设计思想，想到的是设计一个 `Duck` 基类，然后让所有的鸭子都集成此基类。
 
 ```typescript
 class Duck {
@@ -33,7 +33,7 @@ class Duck {
 }
 ```
 
-绿头鸭(MallardDuck)和红头鸭(RedheadDuck)分别继承Duck类：
+绿头鸭(MallardDuck)和红头鸭(RedheadDuck)分别继承 `Duck` 类：
 
 ```typescript
 class MallardDuck extends Duck {
@@ -59,7 +59,7 @@ class RedheadDuck extends Duck {
 
 现在对所有鸭子提出了新的需求，要求所有鸭子都会飞。
 
-设计者立马想到的是给 Duck 类添加 fly 方法，这样所有的鸭子都具备了飞行的能力。
+设计者立马想到的是给 `Duck` 类添加 `fly` 方法，这样所有的鸭子都具备了飞行的能力。
 
 ```typescript
 class Duck {
@@ -80,7 +80,7 @@ class Duck {
 
 但是这个时候代码经过测试发现了一个问题，系统中新加的橡皮鸭(RubberDuck)也具备了飞行的能力了。这显然是不科学的，橡皮鸭不会飞，而且也不会叫，只会发出“吱吱”声。
 
-于是，设计者立马想到了覆写 RubberDuck 类的duck和fly方法，其中fly方法里面什么也不做。
+于是，设计者立马想到了覆写 `RubberDuck` 类的 `duck` 和 `fly` 方法，其中 `fly` 方法里面什么也不做。
 
 ```typescript
 class RubberDuck extends Duck {
@@ -95,13 +95,13 @@ class RubberDuck extends Duck {
 
 ### 继承可能并不是最优解
 
-设计者仔细思考了上述设计，提出了一个问题：如果后续新增了更多类型的鸭子，有的鸭子既不会飞又不会叫怎么办呢？难道还是继续覆写fly或者quack方法吗？
+设计者仔细思考了上述设计，提出了一个问题：如果后续新增了更多类型的鸭子，有的鸭子既不会飞又不会叫怎么办呢？难道还是继续覆写 `fly` 或者 `quack` 方法吗？
 
 显然，集成不是最优解。
 
 经过一番思索，设计者想到了通过接口来优化设计。
 
-设计两个接口，分别是 Flable 和 Quackable 接口。
+设计两个接口，分别是 `Flable` 和 `Quackable` 接口。
 
 ```typescript
 interface Flyable {
@@ -113,7 +113,7 @@ interface Quackable {
 }
 ```
 
-这样，只有实现了 Flyable 的鸭子才能飞行，实现了 Quackable 的鸭子才能说话。
+这样，只有实现了 `Flyable` 的鸭子才能飞行，实现了 `Quackable` 的鸭子才能说话。
 
 ```typescript
 class MallardDuck implements Flayable, Quackable {
@@ -134,7 +134,7 @@ class MallardDuck implements Flayable, Quackable {
 
 > 找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起。
 
-在Duck类中，quack 和 fly 是会随着鸭子的不同而改变的，而 swim 和 display 是每个鸭子都不变的。因此，这里可以运用第一个设计原则，就是分开变化和不变化的部分。
+在 `Duck` 类中，`quack` 和 `fly` 是会随着鸭子的不同而改变的，而 swim 和 display 是每个鸭子都不变的。因此，这里可以运用第一个设计原则，就是分开变化和不变化的部分。
 
 ### 面向接口编程，而不是针对实现编程
 
@@ -169,7 +169,7 @@ Dog d = new Dog();
 d.bark();
 ```
 
-因为d的类型是Dog，是一个具体的类，而不是抽象类，并且bark方法是Dog上特有的，不是共性。
+因为 `d` 的类型是 `Dog`，是一个具体的类，而不是抽象类，并且 `bark` 方法是 `Dog` 上特有的，不是共性。
 
 针对接口编程。
 
@@ -178,9 +178,9 @@ Animal a = new Dog();
 a.makeSound();
 ```
 
-变量 a 的类型是 Animal，是一个抽象类型，而不是一个具体类型。此时 a 调用 makeSound 方法，代表的是所有的 Animal 都能进行的一种操作。
+变量 `a` 的类型是 `Animal`，是一个抽象类型，而不是一个具体类型。此时 `a` 调用 `makeSound` 方法，代表的是所有的 `Animal` 都能进行的一种操作。
 
-现在我们接着之前的思路，将鸭子的fly和quack两个行为变为两个接口 FlyBehavior 和 QuackBehavior。所有的鸭子不直接实现这两个接口，而是有专门的行为类实现这两个接口。
+现在我们接着之前的思路，将鸭子的 `fly` 和 `quack` 两个行为变为两个接口 `FlyBehavior` 和 `QuackBehavior`。所有的鸭子不直接实现这两个接口，而是有专门的行为类实现这两个接口。
 
 ```typescript
 interface FlyBehavior {
@@ -229,14 +229,14 @@ class MuteQuack implements QuackBehavior {
 
 这样做有**两**个好处：
 
-1. 鸭子的行为可以被复用，因为这些行为已经与鸭子本身无关了。
-2. 我们可以新增一些行为，不会担心影响到既有的行为类，也不会影响有使用到飞行行为的鸭子类。
+1. **鸭子的行为可以被复用，因为这些行为已经与鸭子本身无关了。**
+2. **我们可以新增一些行为，不会担心影响到既有的行为类，也不会影响有使用到飞行行为的鸭子类。**
 
 ### 整合鸭子的行为
 
 现在鸭子的所有的行为需要被整合在一起，需要委托给别人处理。
 
-继续改造Duck类
+继续改造 `Duck` 类
 
 ```typescript 
 abstract class Duck {
@@ -268,11 +268,11 @@ abstract class Duck {
   }
 }
 ```
-在鸭子类内部定义两个变量，类型分别为 FlyBehavior 和 QuackBehavior 的接口类型，声明为接口类型方便后续通过多态的方式设置鸭子的行为。移除鸭子类中的fly和quack方法，因为这两个方法已经被分离到fly行为类和quack行为类中了。
+在鸭子类内部定义两个变量，类型分别为 `FlyBehavior` 和 `QuackBehavior` 的接口类型，声明为接口类型方便后续通过多态的方式设置鸭子的行为。移除鸭子类中的 `fly` 和 `quack` 方法，因为这两个方法已经被分离到 `fly` 行为类和 `quack` 行为类中了。
 
-通过 performQuack 方法来调用鸭子的行为，setFlyBehavior 方法来动态修改鸭子的行为。
+通过 `performQuack` 方法来调用鸭子的行为，`setFlyBehavior` 方法来动态修改鸭子的行为。
 
-所有的鸭子集成 Duck 类：
+所有的鸭子集成 `Duck` 类：
 
 ```typescript
 // 绿头鸭
