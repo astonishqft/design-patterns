@@ -417,7 +417,9 @@ app.execute();
 
 策略模式结构图:
 
-![策略模式结构图](./structure.png)
+<div align=center>
+  <img alt="策略模式结构图" src="./structure.png" />
+</div>
 
 ## 策略模式的使用场景
 
