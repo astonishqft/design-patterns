@@ -421,6 +421,8 @@ app.execute();
 
 ## 参考
 
+[源代码地址](https://github.com/astonishqft/design-patterns/tree/main/packages/strategy)
+
 1. [针对接口编程，而不是针对实现编程](https://codeshellme.github.io/2020/12/dp-code-interface/)
 2. [策略模式](https://refactoringguru.cn/design-patterns/strategy)
 2. HeadFirst设计模式
