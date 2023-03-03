@@ -142,3 +142,200 @@ class MallardDuck implements Flayable, Quackable {
 
 > 针对接口编程，而不是针对实现编程。
 
+**针对接口编程**的真正含义是**针对超类型编程(抽象类或者接口)**，它利用了**多态**的特性。
+
+在针对接口的编程中，一个变量声明的类型应该是一个超类型，超类型强调的是它与它的所有派生类共有的“特性”。
+
+针对实现编程。
+
+比如：
+
+```typescript
+interface Animal {
+  void makeSound();
+}
+
+class Dog implements Animal {
+  public void makeSound() {
+    bark();
+  }
+  
+  public void bark() {
+    // 汪汪叫
+  }
+}
+
+Dog d = new Dog();
+d.bark();
+```
+
+因为d的类型是Dog，是一个具体的类，而不是抽象类，并且bark方法是Dog上特有的，不是共性。
+
+针对接口编程。
+
+```typescript
+Animal a = new Dog();
+a.makeSound();
+```
+
+变量 a 的类型是 Animal，是一个抽象类型，而不是一个具体类型。此时 a 调用 makeSound 方法，代表的是所有的 Animal 都能进行的一种操作。
+
+现在我们接着之前的思路，将鸭子的fly和quack两个行为变为两个接口 FlyBehavior 和 QuackBehavior。所有的鸭子不直接实现这两个接口，而是有专门的行为类实现这两个接口。
+
+```typescript
+interface FlyBehavior {
+  fly(): void;
+}
+
+interface QuackBehavior {
+  quack(): void;
+}
+```
+
+行为类来实现接口：
+
+```typescript
+// 实现了所有可以飞行的鸭子的动作
+class FlyWithWings implements FlyBehavior {
+  fly(): void {
+    console.log('I can fly with my wings !');
+  }
+}
+// 实现了所有不会飞行的鸭子的动作
+class FlyNoWay implements FlyBehavior {
+  fly(): void {
+    console.log('I can not fly !');
+  }
+}
+// 实现了所有坐火箭飞行的鸭子的动作
+class FlyRocketPowered implements FlyBehavior {
+  fly(): void {
+    console.log('I can fly with a rocket !');
+  }
+}
+// 实现了橡皮鸭的吱吱叫声
+class Squeak implements QuackBehavior {
+  quack(): void {
+    console.log('zhi zhi !');
+  }
+}
+// 实现了哑巴鸭的叫声
+class MuteQuack implements QuackBehavior {
+  quack(): void {
+    console.log();
+  }
+}
+```
+
+这样做有**两**个好处：
+
+1. 鸭子的行为可以被复用，因为这些行为已经与鸭子本身无关了。
+2. 我们可以新增一些行为，不会担心影响到既有的行为类，也不会影响有使用到飞行行为的鸭子类。
+
+### 整合鸭子的行为
+
+现在鸭子的所有的行为需要被整合在一起，需要委托给别人处理。
+
+继续改造Duck类
+
+```typescript 
+abstract class Duck {
+
+  flyBehavior: FlyBehavior;
+  quackBehavior: QuackBehavior;
+
+  constructor(flyBehavior: FlyBehavior, quackBehavior: QuackBehavior) {
+    this.flyBehavior = flyBehavior;
+    this.quackBehavior = quackBehavior;
+  }
+
+  public performFly(): void {
+    this.flyBehavior.fly();
+  }
+
+  public performQuack():void {
+    this.quackBehavior.quack();
+  }
+
+  public setFlyBehavior(flyBehavior: FlyBehavior) {
+    this.flyBehavior = flyBehavior;
+  }
+  
+  public abstract display(): void;
+
+  public swim() {
+    console.log('all ducks can swim !');
+  }
+}
+```
+在鸭子类内部定义两个变量，类型分别为 FlyBehavior 和 QuackBehavior 的接口类型，声明为接口类型方便后续通过多态的方式设置鸭子的行为。移除鸭子类中的fly和quack方法，因为这两个方法已经被分离到fly行为类和quack行为类中了。
+
+通过 performQuack 方法来调用鸭子的行为，setFlyBehavior 方法来动态修改鸭子的行为。
+
+所有的鸭子集成 Duck 类：
+
+```typescript
+// 绿头鸭
+class MallardDuck extends Duck {
+  constructor() {
+    super(new FlyWithWings(), new Quack());
+  }
+
+  display() {
+    console.log('I am mallard duck !');
+  }
+}
+
+// 模型鸭
+class ModelDuck extends Duck {
+  constructor() {
+    super(new FlyNoWay(), new MuteQuack());
+  }
+
+  public display(): void {
+    console.log('I am model duck !');
+  }
+}
+```
+
+在鸭子的构造函数中调用父类的构造函数，初始化鸭子的行为。
+
+### 测试鸭子游戏
+
+```typescript
+class Test {
+  duck: Duck;
+
+  constructor() {
+    this.duck = new MallardDuck();
+  }
+
+  setPerformFly() {
+    this.duck.setFlyBehavior(new FlyRocketPowered());
+  }
+
+  quack() {
+    this.duck.performQuack();
+  }
+
+  fly() {
+    this.duck.performFly();
+  }
+}
+
+const test = new Test();
+
+test.fly();
+test.quack();
+
+test.setPerformFly();
+
+test.fly();
+```
+
+通过
+
+
+## 参考
+
+1. [针对接口编程，而不是针对实现编程](https://codeshellme.github.io/2020/12/dp-code-interface/)
