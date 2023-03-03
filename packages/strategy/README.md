@@ -8,8 +8,7 @@
 
 ## 策略模式
 
-TODO:
-简介，需要补充说明
+> 策略模式：Strategy，是指，定义一组算法，并把其封装到一个对象中。然后在运行时，可以灵活的使用其中的一个算法
 
 ## 模拟鸭子游戏
 
@@ -333,9 +332,90 @@ test.setPerformFly();
 test.fly();
 ```
 
-通过
+通过 `setFlyBehavior` 可以动态的改变鸭子的行为，是鸭子具备坐火箭飞行的能力。
 
+### 多用组合，少用集成
+
+从上面的例子就可以看出，每一个鸭子都有一个 `FlyBehavior` 和 `QuackBehavior`，让鸭子(`Duck` 类)将飞行和呱呱叫委托它代为处理。
+
+当你将两个类结合起来使用，这就是组合(`composition`)。这种做法和继承不同的地方在于，鸭子的行为不是继承而来，而是和使用的行为对象组合而来的。也就是我们要介绍的第三个设计原则：
+
+> 多用组合，少用继承
+
+## 策略模式的设计步骤
+
+1. 定义一个接口，接口中声明各个算法所共有的操作
+
+```typescript
+interface Strategy {
+  execute(): void;
+} 
+```
+
+2. 定义一系列的策略，并且在遵循 Strategy 接口的基础上实现算法
+```typescript
+class StrategyA implements Strategy {
+  execute() {
+    console.log('I am StrategyA'); // 算法 A
+  }
+}
+
+class StrategyB implements Strategy {
+  execute() {
+    console.log('I am StrategyB'); // 算法 B
+  }
+}
+```
+
+3. 定义一个上下文 `Context` 类，在 `Context` 类中维护指向某个策略对象的引用，在构造函数中来接收策略类，同时还可以通过 `setStrategy` 在运行时动态的切换策略类，`Context` 类通过 `setStrategy` 来将具体的工作委派给策略对象。这里的 `Context` 类也可以作为一个基类被具体的实现类所继承，就相当于上文鸭子游戏中介绍的 Duck 类，可以被 MallardDuck、ReadheadDuck 等继承。
+
+```typescript
+class Context {
+  private strategy: Strategy;
+
+  constructor(stategy: Stategy) {
+    this.stategy = Stategy;
+  }
+
+  executeStrategy() {
+    this.stragegy.execute();
+  }
+
+  setStrategy(stategy: Stategy) {
+    this.stategy = stategy;
+  }
+}
+```
+
+4. 创建客户端类，客户端代码会根据条件来选择具体的策略
+
+```typescript
+class Application {
+  stragegy: Stragegy;
+  constructor(stragegy: Stragegy) {
+    this.stragegy = stragegy;
+  }
+  setCondition(condition) {
+    if (condition === 'conditionA') {
+      stragegy.setStrategy(new StrategyA());
+    }
+    if (condition === 'conditionB') {
+      stragegy.setStrategy(new StrategyB());
+    }
+  }
+  execute() {
+    this.stragegy.execute();
+  }
+}
+
+const app = new Application();
+
+app.setCondition('conditionB');
+app.execute();
+```
 
 ## 参考
 
 1. [针对接口编程，而不是针对实现编程](https://codeshellme.github.io/2020/12/dp-code-interface/)
+2. [策略模式](https://refactoringguru.cn/design-patterns/strategy)
+2. HeadFirst设计模式
